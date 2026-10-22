@@ -3,10 +3,6 @@ name: Build WHIM Android APK
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'WHIM_Cloud_Ready_Package_WHIM_Tech_Edition_v1_Device.zip'
-      - '.github/workflows/build-whim-apk.yml'
 
 permissions:
   contents: read
@@ -25,11 +21,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      -       - name: Configure Android SDK
+      - name: Configure Android SDK
         run: |
           echo "ANDROID_HOME=${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
           echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
           test -d "${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          echo "ANDROID_HOME=${ANDROID_HOME:-$ANDROID_SDK_ROOT}" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$ANDROID_HOME}" >> "$GITHUB_ENV"
 
       - name: Install Android SDK 35
         run: |
@@ -41,39 +39,26 @@ jobs:
 
       - name: Install Gradle 8.7
         run: |
-          curl -fL \
-            https://services.gradle.org/distributions/gradle-8.7-bin.zip \
-            -o /tmp/gradle.zip
+          curl -fL https://services.gradle.org/distributions/gradle-8.7-bin.zip -o /tmp/gradle.zip
           unzip -q /tmp/gradle.zip -d /tmp
 
       - name: Extract WHIM source
         run: |
-          unzip -q \
-            WHIM_Cloud_Ready_Package_WHIM_Tech_Edition_v1_Device.zip \
-            -d whim-source
+          unzip -q WHIM_Cloud_Ready_Package_WHIM_Tech_Edition_v1_Device.zip -d whim-source
           test -f whim-source/android-apk-project/settings.gradle
           test -f whim-source/android-apk-project/app/build.gradle
 
       - name: Build debug APK
         run: |
           cd whim-source/android-apk-project
-          /tmp/gradle-8.7/bin/gradle \
-            --no-daemon assembleDebug
+          /tmp/gradle-8.7/bin/gradle --no-daemon assembleDebug
 
-      -       - name: Configure Android SDK
-        run: |
-          echo "ANDROID_HOME=${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
-          test -d "${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-                - name: Install Android SDK 35
-        run: |
-          yes | sdkmanager --licenses
-          sdkmanager \
-            "platform-tools" \
-            "platforms;android-35" \
-            "build-tools;35.0.0"
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: WHIM-Android-Debug-APK
           path: whim-source/android-apk-project/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
+
+
