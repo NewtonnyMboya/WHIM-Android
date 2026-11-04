@@ -47,7 +47,11 @@ jobs:
             exit 1
           fi
           echo "Using SDK manager: $SDKMANAGER"
+          # sdkmanager exits after accepting licenses, which can close the yes pipe early.
+          # Disable pipefail only for this license-acceptance pipeline.
+          set +o pipefail
           yes | "$SDKMANAGER" --licenses
+          set -o pipefail
           "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Install Gradle 8.7
