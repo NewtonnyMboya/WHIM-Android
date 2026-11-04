@@ -26,9 +26,15 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
+      - name: Use runner-provided Android SDK
+        shell: bash
+        run: |
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT}}"
+          if [ -z "$SDK_ROOT" ] || [ ! -d "$SDK_ROOT" ]; then
+            echo "::error::Android SDK directory is not available on this runner"
+            exit 1
+          fi
+          echo "Android SDK root: $SDK_ROOT"
       - name: Install Android SDK 35
         shell: bash
         run: |
