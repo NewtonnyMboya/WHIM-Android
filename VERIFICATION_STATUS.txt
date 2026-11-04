@@ -1,0 +1,9 @@
+WHIM v2.3.1 verification status
+
+PASS: JavaScript inline script syntax check (Node.js).
+PASS: generated XLSX archive integrity (ZIP CRC/structure).
+PASS: generated XLSX opens with openpyxl and contains Materials + Warehouse Flow worksheets.
+PASS: generated workbook includes all restored material/movement columns.
+PASS: source checks confirm lazy OCR load is invoked before recognition.
+PENDING: Android Gradle assembleDebug on GitHub Actions.
+PENDING: Android-device validation of Chrome redirects, Storage Access Framework save/pick, OCR worker download, and print service.

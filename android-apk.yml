@@ -1,0 +1,48 @@
+name: Build WHIM Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "WHIM_Version_v2_Theme_Repair_Company_Excel/WHIM/android-apk-project/**"
+      - ".github/workflows/android-apk.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+
+      - name: Build debug APK
+        working-directory: WHIM_Version_v2_Theme_Repair_Company_Excel/WHIM/android-apk-project
+        run: gradle --no-daemon :app:assembleDebug
+
+      - name: Rename APK
+        run: |
+          mkdir -p release
+          cp WHIM_Version_v2_Theme_Repair_Company_Excel/WHIM/android-apk-project/app/build/outputs/apk/debug/app-debug.apk release/whim.apk
+
+      - name: Upload whim.apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: whim-apk
+          path: release/whim.apk
+          if-no-files-found: error

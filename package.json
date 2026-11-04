@@ -1,0 +1,17 @@
+{
+  "name": "whim-cloud-api",
+  "version": "1.0.0-dev.1",
+  "private": true,
+  "description": "Warehouse Inventory Manager cloud API scaffold \u2014 Version 1 of Development",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}

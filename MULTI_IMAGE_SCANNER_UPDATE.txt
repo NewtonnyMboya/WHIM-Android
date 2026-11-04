@@ -1,0 +1,21 @@
+WAREHOUSE INVENTORY MANAGER — MULTI-IMAGE MATERIAL SCANNER UPDATE
+
+Implemented:
+- Replaced the camera-based label capture interface with a multi-image file picker suitable for desktop and mobile image galleries.
+- Each selected image is processed separately with Tesseract OCR and displayed as an individual review card.
+- Extracted style, color, quantity, unit, and raw OCR text can be reviewed and corrected before use.
+- Exact existing style + color matches automatically populate the existing item code.
+- New or unmatched style/color combinations require the user to enter an item code; duplicate codes belonging to other materials are rejected.
+- Applying a result populates the Material Information Sheet and carries a detected quantity into the existing inbound movement flow.
+- Existing OCR results remain in the scanner during the current session so multiple images can be applied one by one.
+- Existing inventory, account, licensing, backup, email-summary, and movement code was retained outside the scanner change.
+
+Verification:
+- HTML parsed with Python's HTMLParser.
+- Inline JavaScript syntax checked with Node.js --check.
+- ZIP archive integrity checked with unzip -t.
+- Protected source was encrypted with the owner key supplied in the existing Library and synchronized to the Windows and Android source.enc assets.
+- No browser/device runtime OCR test or Android Gradle/APK compilation was performed; OCR engine loading may require network access.
+
+Workflow limitation:
+- The user must review OCR output, save the material record, and then review/save the inbound movement. OCR results are not saved automatically.

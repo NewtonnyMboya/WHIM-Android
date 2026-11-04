@@ -1,0 +1,5 @@
+WHIM EMAIL SUMMARY UPDATE
+
+Added an Email Inbound / Outbound Summary workflow to Backup / Data. The sender enters a Gmail address ending in @gmail.com, chooses inbound or outbound, selects individual matching movement records, and generates a matching .xlsx workbook before opening the default email compose handler with a prepared subject and summary. Because browser security does not allow reliable automatic attachment, the sender must attach the downloaded workbook manually. Workbook rows are filtered to selected movements and associated material codes.
+
+Validation: static source inspection performed. Runtime testing in a browser and APK compilation were not performed in this environment.

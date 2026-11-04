@@ -1,0 +1,32 @@
+WHIM 2.1 ANDROID BUILD
+======================
+
+Android project prepared for the WHIM 2.1 package.
+Application label: WHIM
+Application ID: com.infinitycyber.whim
+Version name: 2.1
+Debug APK output: app/build/outputs/apk/debug/app-debug.apk
+Release artifact name: whim.apk
+
+A GitHub Actions workflow is included at the package root:
+.github/workflows/android-apk.yml
+
+To build in GitHub:
+1. Upload/push the contents of this package to the root of a GitHub repository.
+2. Open Actions and run "Build WHIM Android APK", or push a change under the Android project path.
+3. Wait for the workflow to finish successfully.
+4. Download the "whim-apk" workflow artifact. It contains whim.apk.
+
+Build environment: Java 17, Gradle 8.7, Android SDK platform 35.
+This is a debug APK for installation/testing, not a Play Store release-signed APK.
+
+Important functional checks still required on a physical Android device:
+- owner unlock JSON and matching source.enc selection
+- authentication/licensing and activation
+- camera permission and multi-image OCR
+- inventory persistence, backup/import/export
+- scanner and file-picker workflows
+- email/help handoff and external links
+
+The Android WebView project bundles index.html, source.enc and gst-logo.jpg.
+The owner unlock key and release signing keystore are intentionally not bundled.

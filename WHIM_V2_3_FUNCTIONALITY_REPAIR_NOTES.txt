@@ -1,0 +1,14 @@
+WHIM v2.3.1 Android functionality repair
+
+Repairs included:
+- Excel restore reads the ZIP central directory, resolves worksheet names via workbook relationships, handles inline/shared strings, deflated and stored entries, and detects headings below title rows.
+- Excel export and restore preserve all material fields and complete warehouse movement details (separate inbound/outbound boxes, meters, match, cylinder, specification).
+- Excel import validates records before replacing local data and refuses to save an empty/invalid Materials restore.
+- JSON backup uses a clear WHIM filename and UTF-8 JSON MIME type.
+- Android exports use the Storage Access Framework save dialog, allowing the user to choose Downloads or another accessible folder without broad storage permissions.
+- Blob/data downloads are routed through the Android save dialog instead of showing unsupported-link errors.
+- HTTPS links and redirects are handed to the Android default browser (Chrome when configured).
+- OCR engine is loaded on demand from two CDN endpoints before recognition; worker/core/language paths are configured explicitly and failures are reported.
+- Android native raw-DEFLATE fallback supports older WebView versions that lack DecompressionStream('deflate-raw').
+
+Build status: source-level checks and generated XLSX validation passed. Android Gradle build and on-device tests must still be completed in GitHub Actions/on a device.

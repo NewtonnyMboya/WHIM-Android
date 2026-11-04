@@ -1,0 +1,7 @@
+plugins { id "com.android.application" version "8.6.1" }
+
+android {
+    namespace "com.infinitycyber.whim"
+    compileSdk 35
+    defaultConfig { applicationId "com.infinitycyber.whim"; minSdk 23; targetSdk 28; versionCode 24; versionName "2.3.1" }
+}
