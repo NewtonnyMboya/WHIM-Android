@@ -62,11 +62,18 @@ jobs:
       - name: Extract WHIM v2.1 project
         run: |
           unzip -q WHIM_Android_Project_v2_1_Prepared.zip -d whim-source
-          PROJECT_DIR="whim-source/WHIM_Android_Project_v2_1_Prepared/WHIM_Version_v2_Theme_Repair_Company_Excel/WHIM/android-apk-project"
-          test -f "$PROJECT_DIR/settings.gradle"
+          SETTINGS_FILE="$(find whim-source -type f -name settings.gradle -print -quit)"
+          if [ -z "$SETTINGS_FILE" ]; then
+            echo "::error::settings.gradle was not found in the uploaded project ZIP"
+            find whim-source -maxdepth 6 -type f | head -100
+            exit 1
+          fi
+          PROJECT_DIR="$(dirname "$SETTINGS_FILE")"
           test -f "$PROJECT_DIR/app/build.gradle"
           test -f "$PROJECT_DIR/app/src/main/AndroidManifest.xml"
+          echo "Detected Android project: $PROJECT_DIR"
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+          echo "APK_RELATIVE_PATH=$PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" >> "$GITHUB_ENV"
 
       - name: Build debug APK
         run: |
@@ -84,6 +91,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: WHIM-Android-v2.1-APK
-          path: whim-source/WHIM_Android_Project_v2_1_Prepared/WHIM_Version_v2_Theme_Repair_Company_Excel/WHIM/android-apk-project/app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ env.APK_RELATIVE_PATH }}
           if-no-files-found: error
           retention-days: 14
