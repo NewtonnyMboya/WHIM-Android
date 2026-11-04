@@ -216,8 +216,8 @@ jobs:
                           request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                           request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,
                               URLUtil.guessFileName(url, contentDisposition, mimeType));
-                          String cookies = CookieManager.getInstance().getCookie(url);
-                          if (cookies != null) request.addRequestHeader("Cookie", cookies);
+                          String cookieHeader = CookieManager.getInstance().getCookie(url);
+                          if (cookieHeader != null) request.addRequestHeader("Cookie", cookieHeader);
                           if (userAgent != null) request.addRequestHeader("User-Agent", userAgent);
                           DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                           manager.enqueue(request);
