@@ -62,15 +62,23 @@ jobs:
       - name: Extract WHIM v2.1 project
         run: |
           unzip -q WHIM_Android_Project_v2_1_Prepared.zip -d whim-source
-          SETTINGS_FILE="$(find whim-source -type f -name settings.gradle -print -quit)"
-          if [ -z "$SETTINGS_FILE" ]; then
-            echo "::error::settings.gradle was not found in the uploaded project ZIP"
-            find whim-source -maxdepth 6 -type f | head -100
+          PROJECT_DIR=""
+          while IFS= read -r SETTINGS_FILE; do
+            CANDIDATE_DIR="$(dirname "$SETTINGS_FILE")"
+            if [ -f "$CANDIDATE_DIR/app/build.gradle" ] && [ -f "$CANDIDATE_DIR/app/src/main/AndroidManifest.xml" ]; then
+              PROJECT_DIR="$CANDIDATE_DIR"
+              break
+            fi
+          done < <(find whim-source -type f -name settings.gradle -print)
+          if [ -z "$PROJECT_DIR" ]; then
+            echo "::error::No complete Android Gradle project was found. Showing extracted file tree:"
+            find whim-source -maxdepth 8 -type f | sort | head -250
+            echo "Detected Gradle settings files:"
+            find whim-source -type f -name settings.gradle -print
+            echo "Detected app build files:"
+            find whim-source -type f -path '*/app/build.gradle' -print
             exit 1
           fi
-          PROJECT_DIR="$(dirname "$SETTINGS_FILE")"
-          test -f "$PROJECT_DIR/app/build.gradle"
-          test -f "$PROJECT_DIR/app/src/main/AndroidManifest.xml"
           echo "Detected Android project: $PROJECT_DIR"
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
           echo "APK_RELATIVE_PATH=$PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" >> "$GITHUB_ENV"
