@@ -24,9 +24,19 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install Android SDK 35
+        shell: bash
         run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT}}"
+          echo "Android SDK root: $SDK_ROOT"
+          SDKMANAGER="$(find "$SDK_ROOT" -type f -name sdkmanager -print -quit)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "::error::sdkmanager was not found under $SDK_ROOT"
+            find "$SDK_ROOT" -maxdepth 4 -type d | head -80
+            exit 1
+          fi
+          echo "Using SDK manager: $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses
+          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Install Gradle 8.7
         run: |
